@@ -12,7 +12,7 @@ export default function Home() {
             <Uploadfile/>
                
             </div>
-            <VideoShow />
+            {/* <VideoShow /> */}
         </>
     );
 }
