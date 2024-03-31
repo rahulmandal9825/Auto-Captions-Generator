@@ -23,6 +23,7 @@ const Uploadfile = () => {
          console.log(res.data);
          setIsUploading(false);
          const newName = res.data.newName;
+         console.log(newName);
          router.push('/'+newName)
         }
 

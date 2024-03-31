@@ -1,25 +1,98 @@
+// import { GetTranscriptionJobCommand, StartTranscriptionJobCommand, TranscribeClient } from "@aws-sdk/client-transcribe";
+
+
+
+
+// export async function GET(req){
+//   const url = new URL(req.url);
+//   const searchParams = new URLSearchParams(url.searchParams);
+//   const filename = searchParams.get('filename');
+
+//   const transcribeClient = new TranscribeClient({
+//     region:'ap-southeast-2',
+//     credentials:{
+//         accessKeyId: process.env.AWS_ACCESS_KEY,
+//         secretAccessKey: process.env.AWS_SECERT_ACCESS_KEY,
+//     }
+//   });
+
+//  const transcriptionJobStatusCommand = new GetTranscriptionJobCommand({
+//       TranscriptionJobName:filename,
+//     });
+
+// let existingJobFound =false;
+
+// try {
+  
+//     const jobStatusResult = await transcribeClient.send(
+//       transcriptionJobStatusCommand
+//     );
+//     existingJobFound = true
+   
+// } catch (error) {
+//   console.log(error);
+// }
+   
+    
+
+// const transcription = await getTranscriptionFile(filename);
+// if (transcription) {
+//   return Response.json({
+//     status:'COMPLETED',
+//     transcription,
+//   });
+// }
+
+// if (!existingJobFound) {
+//     const transcriptionCommand = new StartTranscriptionJobCommand({
+//     TranscriptionJobName:filename,
+//     OutputBucketName: process.env.BUCKET_NAME,
+//     OutputKey: filename + '.transcription',
+//     IdentifyLanguage:true,
+//     Media:{
+//       MediaFileUri: 's3://' + process.env.BUCKET_NAME + '/' +filename,
+//     },
+//   });
+
+//   const result = await transcribeClient.send(transcriptionCommand);
+//   console.log(result);
+
+// }
+
+
+
+
+
+
+// return Response.json(null);
+// }
+
+
+
+
 import {GetObjectCommand, S3Client} from "@aws-sdk/client-s3";
 import {GetTranscriptionJobCommand, StartTranscriptionJobCommand, TranscribeClient} from "@aws-sdk/client-transcribe";
 
 function getClient() {
   return new TranscribeClient({
-    region: 'ap-southeast-2',
-    credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    },
-  });
+        region:'ap-southeast-2',
+        credentials:{
+            accessKeyId: process.env.AWS_ACCESS_KEY,
+            secretAccessKey: process.env.AWS_SECERT_ACCESS_KEY,
+        }
+      });
 }
+
 function createTranscriptionCommand(filename) {
   return new StartTranscriptionJobCommand({
-    TranscriptionJobName: filename,
-    OutputBucketName: process.env.BUCKET_NAME,
-    OutputKey: filename + '.transcription',
-    IdentifyLanguage: true,
-    Media: {
-      MediaFileUri: 's3://' + process.env.BUCKET_NAME + '/'+filename,
-    },
-  });
+        TranscriptionJobName:filename,
+        OutputBucketName: process.env.BUCKET_NAME,
+        OutputKey: filename + '.transcription',
+        IdentifyLanguage:true,
+        Media:{
+          MediaFileUri: 's3://' + process.env.BUCKET_NAME + '/' +filename,
+        },
+      });
 }
 async function createTranscriptionJob(filename) {
   const transcribeClient = getClient();
@@ -53,10 +126,10 @@ async function streamToString(stream) {
 async function getTranscriptionFile(filename) {
   const transcriptionFile = filename + '.transcription';
   const s3client = new S3Client({
-    region: 'ap-southeast-2',
+    region:'ap-southeast-2',
     credentials: {
       accessKeyId: process.env.AWS_ACCESS_KEY,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      secretAccessKey: process.env.AWS_SECERT_ACCESS_KEY,
     },
   });
   const getObjectCommand = new GetObjectCommand({
@@ -101,10 +174,10 @@ export async function GET(req) {
   // creating new transcription job
   if (!existingJob) {
     const newJob = await createTranscriptionJob(filename);
+      console.log("job is created");
     return Response.json({
-      status: newJob.TranscriptionJob.TranscriptionJobStatus,
+      status: newJob,
     });
+  
   }
-
-  return Response.json(null);
 }
