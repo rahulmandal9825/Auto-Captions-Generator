@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import Uploadicon from "../compundent/Uploadicon";
 import TranscriptionEditor from "../compundent/TranscriptionEditor";
 import clearTranscriptionItems from "../compundent/cleartranscriptionItems";
+import ResultVideo from "../compundent/Resultvideo";
 
 export default function FilePage({params}) {
     const filename = params.filename;
@@ -41,7 +42,7 @@ export default function FilePage({params}) {
     if (isFetchingInfo) {
         return <div>Fetching information...</div>;
     }
-    console.log(awsTranscriptionItems);
+
     return (
         <div>
           
@@ -53,22 +54,9 @@ export default function FilePage({params}) {
                         setAwsTranscriptionItems={setAwsTranscriptionItems}
                     />
                 </div>
-                <div>
-                    <h2 className="text-2xl mb-4 text-white/60">Result</h2>
-                    <div className="sticky top-0">
-                        <button className="p-2 bg-green-500  hover:bg-green-600 flex rounded-xl outline-none gap-1 font-semibold border-none  w-[170px] m-3 text- h-[40px]">
-                            <Uploadicon />
-                            Transcript Now
-                        </button>
-
-                        <div className="w-[328px] h-[580px] rounded-xl overflow-hidden">
-                            <video
-                                className=" w-full h-full "
-                                controls
-                                src={"https://rahul-auto-caption.s3.amazonaws.com/" + filename}
-                            ></video>
-                        </div>
-                    </div>
+                <div className="flex flex-col items-center md:items-start">
+                    <h2 className="text-2xl  mb-4 text-white/60">Result</h2>
+                    <ResultVideo filename={filename}   transcriptionItems={awsTranscriptionItems}/>
                 </div>
             </div>
         </div>
