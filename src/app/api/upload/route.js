@@ -13,12 +13,12 @@ export async function POST(req){
     const s3Client =new S3Client({
         region:'ap-southeast-2',
         credentials:{
-            accessKeyId:process.env.AWS_ACCESS_KEY,
-            secretAccessKey:process.env.AWS_SECERT_ACCESS_KEY,
+            accessKeyId:process.env.AWS_ACCESS,
+            secretAccessKey:process.env.AWS_SECERT_ACCESS,
         },
     });
     const uploadCommand = new PutObjectCommand({
-        Bucket: process.env.BUCKET_NAME,
+        Bucket: process.env.BUCKET,
         Body: data,
         ACL: 'public-read',
         ContentType: type,
